@@ -1,16 +1,20 @@
 // Visualize sort
-const pause = (n) => {
-    for (let i = 0; i < n * 999_999_999_999; i++);
-}
+let count = 1;
 
-const sort = (arr, compare, swap) => {
+const wait = (t) => new Promise(res => {
+    setTimeout(() => res(), t);
+});
+
+const sort = async (arr, compare, swap) => {
     arr = [...arr]
     for (let i = 0; i < arr.length; i++) {
         for (let j = i + 1; j < arr.length; j++) {
             const rez = compare(arr[i], arr[j])
             if (rez > 0) {
                 console.log('swap', { i, j, arr_i: arr[i], arr_j: arr[j] })
-                swap(arr, i, j);
+                await swap(arr, i, j);
+                count++;
+                console.log(1);
             }
         }
     }
@@ -34,10 +38,19 @@ console.log(elems.forEach(console.log));
 
 const compare = (a, b) => Number(a.textContent) - Number(b.textContent);
 
-const swap = (nodeList, i, j) => {
+const swap = async (nodeList, i, j) => {
+    nodeList[i].style.color = "red";
+    nodeList[i].style.backgroundColor = "skyblue";
+    nodeList[j].style.color = "yellow";
+    nodeList[j].style.backgroundColor = "lightgreen";
+    await wait(1000);
     const c = nodeList[i].textContent;
     nodeList[i].textContent = nodeList[j].textContent;
     nodeList[j].textContent = c;
+    nodeList[i].style.color = "black";
+    nodeList[j].style.color = "black";
+    nodeList[i].style.backgroundColor = "white";
+    nodeList[j].style.backgroundColor = "white";
 }
 
 sort(elems, compare, swap);
